@@ -28,7 +28,7 @@ html, body {
 .card-stack {
   position: relative;
   width: 100%;
-  height: calc(100vh - var(--bottom-nav-height) - 80px); /* leave room for buttons */
+  height: calc(100dvh - var(--bottom-nav-height) - 80px); /* leave room for buttons */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -213,7 +213,7 @@ html, body {
 .end-of-deck {
   text-align: center;
   padding: 40px 20px;
-  height: calc(100vh - var(--bottom-nav-height));
+  height: calc(100dvh - var(--bottom-nav-height));
   overflow-y: auto;
 }
 
@@ -336,7 +336,7 @@ html, body {
   padding: 16px;
   padding-bottom: calc(var(--bottom-nav-height) + 20px);
   overflow-y: auto;
-  height: 100vh;
+  height: 100dvh;
 }
 
 .page-content h1 {
@@ -415,7 +415,7 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: calc(100vh - var(--bottom-nav-height));
+  height: calc(100dvh - var(--bottom-nav-height));
   color: var(--text-muted);
 }
 

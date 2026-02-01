@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lmbw-v4';
+const CACHE_NAME = 'lmbw-v5';
 const SHELL = [
   './',
   './index.html',
