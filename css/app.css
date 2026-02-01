@@ -1,7 +1,7 @@
 /* ===== LittleManBigWorld — Custom Styles ===== */
 
 :root {
-  --bottom-nav-height: 60px;
+  --bottom-nav-height: calc(60px + env(safe-area-inset-bottom, 0px));
   --accent: #ff2d55;
   --accent-glow: rgba(255, 45, 85, 0.4);
   --bg: #000;
