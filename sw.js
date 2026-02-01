@@ -1,17 +1,17 @@
-const CACHE_NAME = 'lmbw-v2';
+const CACHE_NAME = 'lmbw-v3';
 const SHELL = [
-  '/',
-  '/index.html',
-  '/trending.html',
-  '/search.html',
-  '/profile.html',
-  '/css/bootstrap.min.css',
-  '/css/app.css',
-  '/js/bootstrap.bundle.min.js',
-  '/js/app.js',
-  '/js/destinations.js',
-  '/js/storage.js',
-  '/manifest.json'
+  './',
+  './index.html',
+  './trending.html',
+  './search.html',
+  './profile.html',
+  './css/bootstrap.min.css',
+  './css/app.css',
+  './js/bootstrap.bundle.min.js',
+  './js/app.js',
+  './js/destinations.js',
+  './js/storage.js',
+  './manifest.json'
 ];
 
 self.addEventListener('install', e => {
