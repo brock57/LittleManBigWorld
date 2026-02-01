@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="images/icons/icon-192.png">
+  <title>Trending - LittleManBigWorld</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+  <div class="page-content">
+    <h1>&#128293; Trending</h1>
+    <div class="trending-grid" id="trendingGrid"></div>
+  </div>
+
+  <!-- Detail bottom sheet -->
+  <div class="offcanvas offcanvas-bottom detail-sheet" tabindex="-1" id="detailSheet">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="detailTitle">Destination</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body" id="detailBody"></div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:1100">
+    <div id="stubToast" class="toast" role="alert">
+      <div class="toast-body" id="stubToastMsg">Coming soon!</div>
+    </div>
+  </div>
+
+  <!-- Bottom nav -->
+  <nav class="bottom-nav">
+    <a href="index.html">
+      <span class="nav-icon">&#127758;</span>
+      <span>Explore</span>
+    </a>
+    <a href="trending.html" class="active">
+      <span class="nav-icon">&#128293;</span>
+      <span>Trending</span>
+    </a>
+    <a href="search.html">
+      <span class="nav-icon">&#128269;</span>
+      <span>Search</span>
+    </a>
+    <a href="profile.html">
+      <span class="nav-icon">&#128100;</span>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="js/destinations.js"></script>
+  <script src="js/storage.js"></script>
+  <script>
+    loadState();
+    function buildKayakUrl(kayakCode) {
+      const depart = new Date(); depart.setDate(depart.getDate() + 14);
+      const ret = new Date(depart); ret.setDate(ret.getDate() + 7);
+      const fmt = d => d.toISOString().slice(0, 10);
+      return `https://www.kayak.com/flights/-${kayakCode}/${fmt(depart)}/${fmt(ret)}`;
+    }
+    function openDetail(id) {
+      const dest = DESTINATIONS.find(d => d.id === id);
+      if (!dest) return;
+      document.getElementById('detailTitle').textContent = dest.name;
+      const d = dest.detail || {};
+      const bookBtn = d.kayakCode
+        ? `<a href="${buildKayakUrl(d.kayakCode)}" target="_blank" rel="noopener" class="btn btn-outline-light flex-fill">&#9992; Book on Kayak</a>`
+        : `<button class="btn btn-outline-light flex-fill" onclick="showStubToast('Flight booking coming soon!')">&#9992; Book a Flight</button>`;
+      let body = `
+        <img src="${dest.image}" alt="${dest.name}" class="detail-hero">
+        <p style="color:#aaa">${dest.tagline}</p>
+        <p><span style="color:#ff2d55">&#9829;</span> ${dest.likes.toLocaleString()} likes</p>
+        <div class="detail-section"><h6>Food Recommendations</h6>${d.food && d.food.length ? d.food.map(f => `<span class="badge bg-secondary me-1">${f}</span>`).join('') : '<span style="color:#555">Info coming soon</span>'}</div>
+        <div class="detail-section"><h6>Best Time to Visit</h6>${d.bestTime || '<span style="color:#555">Info coming soon</span>'}</div>
+        <div class="detail-section"><h6>Average Temperature</h6>${d.avgTemp || '<span style="color:#555">Info coming soon</span>'}</div>
+        <div class="detail-section"><h6>Travel Essentials</h6>${d.essentials && d.essentials.length ? d.essentials.map(e => `<span class="badge bg-secondary me-1">${e}</span>`).join('') : '<span style="color:#555">Info coming soon</span>'}</div>
+        <div class="d-flex gap-2 mt-3 mb-4">
+          ${bookBtn}
+          <button class="btn btn-outline-light flex-fill" onclick="shareDest('${dest.id}')">&#128279; Share</button>
+        </div>
+        <div class="detail-section"><h6>Comments</h6><p style="color:#555" class="mb-0">Comments coming soon!</p></div>
+      `;
+      document.getElementById('detailBody').innerHTML = body;
+      new bootstrap.Offcanvas(document.getElementById('detailSheet')).show();
+    }
+    function shareDest(id) {
+      const dest = DESTINATIONS.find(d => d.id === id);
+      if (navigator.share) { navigator.share({ title: dest.name, text: dest.tagline, url: location.href }); }
+      else { showStubToast('Link copied!'); }
+    }
+    function showStubToast(msg) {
+      document.getElementById('stubToastMsg').textContent = msg;
+      new bootstrap.Toast(document.getElementById('stubToast')).show();
+    }
+
+    // Render trending
+    const sorted = [...DESTINATIONS].sort((a, b) => b.likes - a.likes);
+    const grid = document.getElementById('trendingGrid');
+    grid.innerHTML = sorted.map((dest, i) => `
+      <div class="trending-card" onclick="openDetail('${dest.id}')">
+        <img src="${dest.image}" alt="${dest.name}" loading="lazy">
+        <div class="trending-card-info">
+          <div class="dest-name">${i + 1}. ${dest.name}</div>
+          <div class="dest-likes">&#9829; ${dest.likes.toLocaleString()}</div>
+        </div>
+      </div>
+    `).join('');
+  </script>
+</body>
+</html>
